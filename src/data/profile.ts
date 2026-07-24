@@ -29,7 +29,7 @@ export const profile = {
   },
   focus: ["Software Development", "Cybersecurity", "Quantum Computing", "DevOps"],
   languages: {
-    es: ["[Español — Nativo]", "[Inglés — Profesional]"],
-    en: ["[Spanish — Native]", "[English — Professional]"],
+    es: ["Español — Nativo", "Inglés — Básico"],
+    en: ["Spanish — Native", "English — Basic"],
   },
 };

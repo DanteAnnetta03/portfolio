@@ -17,8 +17,9 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "[Tu Nombre] — Portfolio",
-  description: "[Breve descripción para SEO: tu nombre, rol y stack principal.]",
+  title: "Dante Annetta — Portfolio",
+  description:
+    "Portfolio de Dante Annetta, estudiante de Ingeniería en Sistemas de Información especializado en seguridad ofensiva y desarrollo de software.",
 };
 
 // Applies the persisted theme before hydration to avoid a light/dark flash.

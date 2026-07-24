@@ -11,7 +11,7 @@ export const dictionaries = {
       whoami: "Sobre mí",
       achievements: "Logros",
       projects: "Proyectos",
-      brandName: "[Tu Nombre]",
+      brandName: "Dante Annetta",
     },
     whoami: {
       heading: "Sobre mí",
@@ -69,7 +69,7 @@ export const dictionaries = {
       whoami: "About me",
       achievements: "Achievements",
       projects: "Projects",
-      brandName: "[Your Name]",
+      brandName: "Dante Annetta",
     },
     whoami: {
       heading: "About me",
