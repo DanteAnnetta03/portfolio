@@ -20,6 +20,8 @@ const ACHIEVEMENTS_MARKER = "export const achievements: Achievement[] = ";
 const PROJECTS_PATH = path.join(ROOT, "src/data/projects.ts");
 const PROJECTS_MARKER = "export const projects: Project[] = ";
 
+const ENV_LOCAL_PATH = path.join(ROOT, ".env.local");
+
 const rl = createInterface({ input: stdin, output: stdout });
 
 // ---------------------------------------------------------------------------
@@ -429,6 +431,117 @@ async function deleteAchievement() {
 }
 
 // ---------------------------------------------------------------------------
+// CV (Google Drive) — no vive en src/data/*.ts sino en .env.local:
+// GOOGLE_DRIVE_CV_ES_FILE_ID / GOOGLE_DRIVE_CV_EN_FILE_ID. El usuario pega el
+// link para compartir de Drive y acá se extrae el File ID.
+// ---------------------------------------------------------------------------
+
+function extractDriveFileId(input) {
+  const trimmed = input.trim();
+  if (!trimmed) return null;
+
+  const patterns = [
+    // https://drive.google.com/file/d/FILE_ID/view
+    // https://docs.google.com/document/d/FILE_ID/edit
+    // https://docs.google.com/spreadsheets/d/FILE_ID/edit
+    // https://docs.google.com/presentation/d/FILE_ID/edit
+    /\/d\/([a-zA-Z0-9_-]+)/,
+    /[?&]id=([a-zA-Z0-9_-]+)/, // https://drive.google.com/open?id=FILE_ID
+  ];
+  for (const pattern of patterns) {
+    const match = trimmed.match(pattern);
+    if (match) return match[1];
+  }
+
+  // No matchea una URL conocida de Drive: aceptarlo si ya parece un File ID
+  // "pelado" (sin espacios/barras, los IDs de Drive suelen tener 25+ caracteres).
+  if (/^[a-zA-Z0-9_-]{10,}$/.test(trimmed)) {
+    return trimmed;
+  }
+
+  return null;
+}
+
+function readEnvLocal() {
+  if (!fs.existsSync(ENV_LOCAL_PATH)) {
+    return { content: "", values: new Map(), existed: false };
+  }
+  const content = fs.readFileSync(ENV_LOCAL_PATH, "utf8");
+  const values = new Map();
+  for (const line of content.split(/\r?\n/)) {
+    const match = line.match(/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/);
+    if (match) values.set(match[1], match[2]);
+  }
+  return { content, values, existed: true };
+}
+
+function setEnvVar(content, key, value) {
+  const lines = content.length ? content.split(/\r?\n/) : [];
+  if (lines.length && lines[lines.length - 1] === "") lines.pop();
+
+  const idx = lines.findIndex((line) => line.startsWith(`${key}=`));
+  if (idx !== -1) {
+    lines[idx] = `${key}=${value}`;
+  } else {
+    lines.push(`${key}=${value}`);
+  }
+  return lines.join("\n") + "\n";
+}
+
+async function updateCvFileIds() {
+  console.log("\n--- CV (Google Drive) ---");
+  console.log(
+    "Pegá el link para compartir de cada CV: sirve tanto un PDF subido a Drive como un\n" +
+      "Google Doc nativo (éste último se exporta a PDF al vuelo en cada descarga, así que\n" +
+      "siempre refleja la última versión guardada). También podés pegar el File ID solo.\n" +
+      "Se guarda en .env.local — profile.cvUrl sigue apuntando a /api/cv/es y /api/cv/en,\n" +
+      "eso no cambia acá.\n",
+  );
+
+  const { content: initialContent, values, existed } = readEnvLocal();
+  let content = initialContent;
+
+  const targets = [
+    { key: "GOOGLE_DRIVE_CV_ES_FILE_ID", label: "CV en español — link o File ID de Drive" },
+    { key: "GOOGLE_DRIVE_CV_EN_FILE_ID", label: "CV en inglés — link o File ID de Drive" },
+  ];
+
+  let changed = false;
+  for (const target of targets) {
+    const current = values.get(target.key) || "";
+    const raw = await ask(target.label, current);
+    if (!raw) continue;
+
+    const fileId = extractDriveFileId(raw);
+    if (!fileId) {
+      console.log(`  No pude reconocer un File ID válido en "${raw}". Se dejó sin cambios.`);
+      continue;
+    }
+
+    content = setEnvVar(content, target.key, fileId);
+    changed = true;
+    console.log(`  ✔ ${target.key} actualizado.`);
+  }
+
+  if (!changed) {
+    console.log("\nNada para guardar.\n");
+    return;
+  }
+
+  fs.writeFileSync(ENV_LOCAL_PATH, content, "utf8");
+  console.log(
+    "\n✔ .env.local actualizado. Reiniciá `npm run dev` (o redeploy en Vercel) para tomar los cambios.",
+  );
+  if (!existed) {
+    console.log(
+      "  Este .env.local es nuevo: todavía te faltan GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET\n" +
+        "  y GOOGLE_OAUTH_REFRESH_TOKEN — completalos a mano (ver .env.local.example).",
+    );
+  }
+  console.log("");
+}
+
+// ---------------------------------------------------------------------------
 // Perfil (objeto único: solo edición)
 // ---------------------------------------------------------------------------
 
@@ -449,8 +562,17 @@ async function editProfile() {
   profile.bio.es = await askUpdateRequired("Bio (ES)", profile.bio.es);
   profile.bio.en = await askUpdateRequired("Bio (EN)", profile.bio.en);
   profile.avatarUrl = await askUpdateRequired("Avatar (ruta en /public)", profile.avatarUrl);
-  profile.cvUrl.es = await askUpdateRequired("CV en español (ruta en /public)", profile.cvUrl.es);
-  profile.cvUrl.en = await askUpdateRequired("CV en inglés (ruta en /public)", profile.cvUrl.en);
+
+  console.log(
+    "\nCV: se sirve dinámicamente desde Google Drive vía OAuth2, así que no se edita acá.\n" +
+      "  - Si es un PDF subido a Drive: reemplazá el archivo existente (mismo File ID) —\n" +
+      "    no hay nada que tocar en el portfolio.\n" +
+      "  - Si es un Google Doc: simplemente editalo y guardá — se exporta a PDF al vuelo\n" +
+      "    en cada descarga, siempre con la última versión.\n" +
+      "  - Para apuntar a un archivo distinto (File ID nuevo): usá la opción\n" +
+      '    "CV (Google Drive)" del menú principal.\n',
+  );
+
   profile.socials.github = await askUpdateRequired("GitHub", profile.socials.github);
   profile.socials.linkedin = await askUpdateRequired("LinkedIn", profile.socials.linkedin);
   profile.socials.email = await askUpdateRequired("Email (mailto:...)", profile.socials.email);
@@ -529,6 +651,7 @@ async function mainMenu() {
     { label: "Proyectos", action: projectsMenu },
     { label: "Logros", action: achievementsMenu },
     { label: "Perfil", action: editProfile },
+    { label: "CV (Google Drive)", action: updateCvFileIds },
   ]);
   console.log("Listo.");
 }
@@ -543,4 +666,13 @@ if (isMain) {
 }
 
 // Exportado para poder testear la lectura/escritura sin pasar por los prompts.
-export { loadDataFile, saveDataFile, serializeValue, slugify, uniqueSlug };
+export {
+  loadDataFile,
+  saveDataFile,
+  serializeValue,
+  slugify,
+  uniqueSlug,
+  extractDriveFileId,
+  setEnvVar,
+  readEnvLocal,
+};
