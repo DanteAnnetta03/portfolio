@@ -2,33 +2,32 @@
 // EDIT THIS FILE to update your personal information.
 
 export const profile = {
-  name: "[Tu Nombre Apellido]",
+  name: "Dante Annetta",
   role: {
-    es: "[Tu rol, ej: Desarrollador de Software]",
-    en: "[Your role, e.g. Software Developer]",
+    es: "Estudiante de Ingeniería en Sistemas de Información",
+    en: "Information Systems Engineering Student",
   },
   bio: {
-    es: "[Escribí acá una breve descripción sobre vos: quién sos, qué te apasiona, en qué tecnologías trabajás y qué estás buscando. 2-4 líneas suelen ser suficientes.]",
-    en: "[Write a short description about yourself here: who you are, what you're passionate about, which technologies you work with, and what you're looking for. 2-4 lines are usually enough.]",
+    es: "Soy estudiante de Ingeniería en Sistemas de Información en la UTN, apasionado por la seguridad ofensiva y la programación de sistemas. Trabajo con Linux, Python/C++, Docker y herramientas como Burp Suite y nmap, y compito activamente en CTFs. Combino esto con experiencia como docente de automatización industrial, lo que me dio una base sólida en lógica de control y sistemas embebidos. Busco oportunidades junior en ciberseguridad o desarrollo de software donde pueda seguir creciendo técnicamente.",
+    en: "I am an Information Systems Engineering student at UTN with a passion for offensive security and systems programming. I work with Linux, Python/C++, Docker, and tools such as Burp Suite and nmap, and I actively compete in CTFs. I combine this with experience teaching industrial automation, which provided me with a solid foundation in control logic and embedded systems. I am seeking junior-level opportunities in cybersecurity or software development where I can continue to grow technically.",
   },
-  avatarUrl: "/avatar-placeholder.svg",
+  avatarUrl: "/avatar.svg",
   cvUrl: {
-    es: "/cv-es-placeholder.pdf",
-    en: "/cv-en-placeholder.pdf",
+    es: "/CV_Dante_Annetta.pdf",
+    en: "/ENG_CV_Dante_Annetta.pdf",
   },
   socials: {
-    github: "https://github.com/tu-usuario",
-    linkedin: "https://linkedin.com/in/tu-usuario",
-    email: "mailto:tu-email@ejemplo.com",
+    github: "https://github.com/DanteAnnetta03",
+    linkedin: "https://www.linkedin.com/in/danteannetta/",
+    email: "mailto:danteannetta03@gmail.com",
   },
-  // Datos para la ficha técnica (sidebar) y la tira de estadísticas de la sección "Sobre mí".
-  location: "[Ciudad, País]",
-  yearsActive: "[X]",
+  location: "Buenos Aires, Argentina",
+  yearsActive: "4",
   availability: {
-    es: "[Disponible para freelance / tiempo completo / etc.]",
-    en: "[Available for freelance / full-time / etc.]",
+    es: "Freelance / Part Time",
+    en: "Freelance / Part Time",
   },
-  focus: ["[Área 1]", "[Área 2]", "[Área 3]"],
+  focus: ["Software Development", "Cybersecurity", "Quantum Computing", "DevOps"],
   languages: {
     es: ["[Español — Nativo]", "[Inglés — Profesional]"],
     en: ["[Spanish — Native]", "[English — Professional]"],
