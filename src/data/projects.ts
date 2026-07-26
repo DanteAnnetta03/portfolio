@@ -37,4 +37,18 @@ export const projects: Project[] = [
     year: "2026",
     category: "Web Application",
   },
+  {
+    id: "p02",
+    title: "By People",
+    description: {
+      es: "Plataforma para validar ideas de negocio antes de invertir tiempo y dinero en construirlas. El producto combina una landing de captación con un backend preparado para gestionar usuarios, proyectos, perfiles de agentes de IA y corridas de simulación tipo focus group.",
+      en: "A platform for validating business ideas before investing time and money in building them. The product combines a lead-capture landing page with a backend designed to manage users, projects, AI agent profiles, and focus-group-style simulation runs.",
+    },
+    tags: ["Web Application", "Marketing & Growth", "AI"],
+    imageUrl: "/by_people.png",
+    repoUrl: "https://github.com/gonzasharif/romeo-samsung",
+    year: "2026",
+    role: "Founder / Developer",
+    architecture: ["Frontend", "backend API", "LLM API"],
+  },
 ];
