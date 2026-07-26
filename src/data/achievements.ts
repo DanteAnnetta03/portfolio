@@ -10,30 +10,39 @@ export type Achievement = {
 
 export const achievements: Achievement[] = [
   {
-    id: "achievement-1",
-    title: { es: "[Título del logro 1]", en: "[Achievement 1 title]" },
-    description: {
-      es: "[Descripción breve: qué lograste, dónde y por qué es relevante.]",
-      en: "[Short description: what you achieved, where, and why it matters.]",
+    id: "01",
+    title: {
+      es: "QuantumJam y Qiskit Fall Fest 2025",
+      en: "QuantumJam & Qiskit Fall Fest 2025",
     },
-    date: "[Fecha / Date]",
+    description: {
+      es: "Participé en las primeras dos competencias de Computación Cuántica que se realizaron en Argentia. Comencé mi formación en esta área meses antes de la primera competencia y es al día de hoy que sigo aprendiendo por mi cuenta.",
+      en: "I participated in the first two quantum computing competitions held in Argentina. I began my training in this field months before the first competition, and to this day, I continue to learn on my own.",
+    },
+    date: "2025",
   },
   {
-    id: "achievement-2",
-    title: { es: "[Título del logro 2]", en: "[Achievement 2 title]" },
-    description: {
-      es: "[Descripción breve del segundo logro.]",
-      en: "[Short description of the second achievement.]",
+    id: "02",
+    title: {
+      es: "Hacklab 2025",
+      en: "Hacklab 2025",
     },
-    date: "[Fecha / Date]",
+    description: {
+      es: "Junto com mi equipo, participé de una serie de desafíos del tipo CTF en donde logramos estar en el top 26%.",
+      en: "Together with my team, I participated in a series of CTF-style challenges, where we managed to rank in the top 26%.",
+    },
+    date: "2025",
   },
   {
-    id: "achievement-3",
-    title: { es: "[Título del logro 3]", en: "[Achievement 3 title]" },
-    description: {
-      es: "[Descripción breve del tercer logro.]",
-      en: "[Short description of the third achievement.]",
+    id: "03",
+    title: {
+      es: "HackITBA 2026",
+      en: "HackITBA 2026",
     },
-    date: "[Fecha / Date]",
+    description: {
+      es: "Obtuve el cuarto puesto en la categoría de Marketing y Crecimiento (undécimo lugar en la clasificación general) en el Hackathon del ITBA, compitiendo contra más de 200 participantes. El equipo se desenvolvió con éxito en la competición y logró una posición destacada.",
+      en: "I secured fourth place in the Marketing and Growth category (eleventh place overall) at the ITBA Hackathon, competing against more than 200 participants. The team performed successfully in the competition and achieved a notable ranking.",
+    },
+    date: "2026",
   },
 ];
