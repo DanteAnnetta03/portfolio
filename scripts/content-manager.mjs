@@ -184,7 +184,8 @@ function printProjectsList(projects) {
   }
   projects.forEach((p, i) => {
     const status = p.inProgress ? "EN DESARROLLO" : "FINALIZADO";
-    console.log(`  ${i + 1}. [${p.id}] ${p.title} — ${status}`);
+    const featuredTag = p.featured ? " — ★ DESTACADO" : "";
+    console.log(`  ${i + 1}. [${p.id}] ${p.title} — ${status}${featuredTag}`);
   });
 }
 
@@ -322,6 +323,29 @@ async function deleteProject() {
     projects.filter((p) => p.id !== project.id),
   );
   console.log(`\n✔ Proyecto "${project.title}" eliminado.\n`);
+}
+
+async function setFeaturedProject() {
+  const { prefix, value: projects } = loadProjects();
+  if (projects.length === 0) {
+    console.log("  No hay proyectos cargados todavía.\n");
+    return;
+  }
+
+  console.log(
+    "\n--- Marcar proyecto destacado ---\n" +
+      "Es el que se muestra en la sección \"Proyecto destacado\" (con arquitectura,\n" +
+      "nota técnica y ficha completa). El resto solo aparece en la tabla comparativa.\n",
+  );
+  const project = await pickProject(projects, "destacar");
+  if (!project) return;
+
+  for (const p of projects) {
+    p.featured = p.id === project.id ? true : undefined;
+  }
+
+  saveProjects(prefix, projects);
+  console.log(`\n✔ "${project.title}" es ahora el proyecto destacado.\n`);
 }
 
 // ---------------------------------------------------------------------------
@@ -632,6 +656,7 @@ async function projectsMenu() {
     { label: "Agregar", action: addProject },
     { label: "Editar", action: editProject },
     { label: "Eliminar", action: deleteProject },
+    { label: "Marcar como destacado", action: setFeaturedProject },
   ]);
 }
 

@@ -28,7 +28,7 @@ function buildMeta(project: Project, t: Dictionary) {
 export default function Projects() {
   const { locale, t } = useLanguage();
 
-  const featured = projects[0];
+  const featured = projects.find((p) => p.featured) ?? projects[0];
   const featuredMeta = featured ? buildMeta(featured, t) : [];
 
   return (
