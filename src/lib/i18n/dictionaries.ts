@@ -14,9 +14,7 @@ export const dictionaries = {
       brandName: "Dante Annetta",
     },
     hero: {
-      scale: "Escala",
       date: "Fecha",
-      sheet: "Hoja",
     },
     whoami: {
       heading: "Sobre mí",
@@ -76,9 +74,7 @@ export const dictionaries = {
       brandName: "Dante Annetta",
     },
     hero: {
-      scale: "Scale",
       date: "Date",
-      sheet: "Sheet",
     },
     whoami: {
       heading: "About me",
