@@ -13,6 +13,11 @@ export const dictionaries = {
       projects: "Proyectos",
       brandName: "Dante Annetta",
     },
+    hero: {
+      scale: "Escala",
+      date: "Fecha",
+      sheet: "Hoja",
+    },
     whoami: {
       heading: "Sobre mí",
       deck: "Perfil técnico y datos de contacto.",
@@ -47,7 +52,6 @@ export const dictionaries = {
       metaLastUpdate: "Última actualización",
       metaCategory: "Categoría",
       overviewTitle: "Resumen comparativo",
-      tableRef: "Ref.",
       tableProject: "Proyecto",
       tableLinks: "Enlaces",
       featuredLabel: "Proyecto destacado",
@@ -70,6 +74,11 @@ export const dictionaries = {
       achievements: "Achievements",
       projects: "Projects",
       brandName: "Dante Annetta",
+    },
+    hero: {
+      scale: "Scale",
+      date: "Date",
+      sheet: "Sheet",
     },
     whoami: {
       heading: "About me",
@@ -105,7 +114,6 @@ export const dictionaries = {
       metaLastUpdate: "Last update",
       metaCategory: "Category",
       overviewTitle: "Comparative overview",
-      tableRef: "Ref.",
       tableProject: "Project",
       tableLinks: "Links",
       featuredLabel: "Featured project",

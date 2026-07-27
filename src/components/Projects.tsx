@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { projects, type Project } from "@/data/projects";
 import SectionHeading from "@/components/SectionHeading";
+import DocControl from "@/components/DocControl";
+import { functionalStatusDotClass } from "@/lib/functionalColor";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 function buildMeta(project: Project, t: Dictionary) {
@@ -34,9 +36,9 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="mx-auto max-w-5xl scroll-mt-24 border-t border-line px-6 py-16 md:py-20"
+      className="mx-auto max-w-6xl scroll-mt-24 border-t border-line px-6 py-16 md:py-20 2xl:border-t-0"
     >
-      <SectionHeading index="03" title={t.projects.heading} deck={t.projects.deck} />
+      <SectionHeading docId="03" title={t.projects.heading} deck={t.projects.deck} />
 
       {/* Comparison table — scan all entries at a glance. */}
       <p className="mt-10 font-mono text-[11px] uppercase tracking-wide text-ink-muted">
@@ -46,7 +48,6 @@ export default function Projects() {
         <table className="w-full min-w-[640px] border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-line bg-panel-2 font-mono text-[11px] uppercase tracking-wide text-ink-muted">
-              <th className="px-4 py-3 font-medium">{t.projects.tableRef}</th>
               <th className="px-4 py-3 font-medium">{t.projects.tableProject}</th>
               <th className="px-4 py-3 font-medium">{t.projects.metaStatus}</th>
               <th className="px-4 py-3 font-medium">{t.projects.metaYear}</th>
@@ -56,21 +57,38 @@ export default function Projects() {
             </tr>
           </thead>
           <tbody>
-            {projects.map((p, i) => (
+            {projects.map((p) => (
               <tr
                 key={p.id}
                 className="border-b border-line transition-colors last:border-b-0 hover:bg-panel-2"
               >
-                <td className="px-4 py-3 font-mono text-xs text-blue">
-                  P.{String(i + 1).padStart(2, "0")}
+                <td
+                  className={`px-4 py-3 font-medium text-ink ${
+                    p.id === featured?.id ? "border-l-2 border-l-blue" : ""
+                  }`}
+                >
+                  {p.title}
                 </td>
-                <td className="px-4 py-3 font-medium text-ink">{p.title}</td>
                 <td className="px-4 py-3 text-ink-muted">
-                  {p.inProgress ? t.projects.inProgress : t.projects.completed}
+                  <span className="flex items-center gap-2">
+                    <span
+                      className={`inline-block h-1.5 w-1.5 rounded-full ${functionalStatusDotClass[p.inProgress ? "attention" : "positive"]}`}
+                    />
+                    {p.inProgress ? t.projects.inProgress : t.projects.completed}
+                  </span>
                 </td>
                 <td className="px-4 py-3 font-mono text-ink-muted">{p.year ?? "—"}</td>
                 <td className="px-4 py-3 text-ink-muted">{p.tags.join(" / ")}</td>
-                <td className="px-4 py-3 text-ink-muted">{p.category ?? "—"}</td>
+                <td className="px-4 py-3 text-ink-muted">
+                  {p.category ? (
+                    <span className="flex items-center gap-2">
+                      <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue" />
+                      {p.category}
+                    </span>
+                  ) : (
+                    "—"
+                  )}
+                </td>
                 <td className="px-4 py-3">
                   <div className="flex gap-3 font-mono text-xs uppercase tracking-wide">
                     {p.liveUrl && (
@@ -105,22 +123,29 @@ export default function Projects() {
       {/* Featured deep-dive — the first entry gets the full treatment. */}
       {featured && (
         <div className="mt-12 border border-line bg-panel">
-          <div className="border-b border-line px-6 py-4 sm:px-8">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-line px-6 py-4 sm:px-8">
             <p className="font-mono text-[11px] uppercase tracking-wide text-blue">
               {t.projects.featuredLabel}
             </p>
+            <DocControl id="03-A" className="text-[11px] uppercase tracking-wide" />
           </div>
 
           <div className="grid gap-8 p-6 sm:p-8 md:grid-cols-2 md:gap-10">
             <div className="flex flex-col gap-6">
               <figure>
-                <Image
-                  src={featured.imageUrl}
-                  alt={featured.title}
-                  width={640}
-                  height={360}
-                  className="h-56 w-full border border-line object-cover sm:h-64"
-                />
+                <div
+                  className={`h-56 w-full border border-line sm:h-64 ${
+                    featured.imageUrl.endsWith(".svg") ? "" : "halftone-frame"
+                  }`}
+                >
+                  <Image
+                    src={featured.imageUrl}
+                    alt={featured.title}
+                    width={640}
+                    height={360}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
                 <figcaption className="mt-2 font-mono text-[11px] uppercase tracking-wide text-ink-muted">
                   {t.projects.figureCaptionPrefix} {featured.title}
                 </figcaption>
@@ -149,7 +174,7 @@ export default function Projects() {
 
             <div className="flex flex-col gap-5">
               <div>
-                <h3 className="text-xl font-semibold text-ink">{featured.title}</h3>
+                <h3 className="text-xl font-medium text-ink">{featured.title}</h3>
                 <p className="mt-2 leading-relaxed text-ink-muted">
                   {featured.description[locale]}
                 </p>

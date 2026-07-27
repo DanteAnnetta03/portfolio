@@ -9,12 +9,12 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-line px-6 py-8">
-      <div className="mx-auto flex max-w-5xl flex-col gap-2 text-sm sm:flex-row sm:items-center sm:justify-between">
+      <div className="mx-auto flex max-w-6xl flex-col gap-2 text-sm sm:flex-row sm:items-center sm:justify-between 2xl:max-w-[2368px]">
         <p className="text-ink-muted">
           © {year} {profile.name} — {t.footer.rights}
         </p>
         <p className="font-mono text-[11px] uppercase tracking-wide text-ink-muted">
-          Doc 01-A · Rev. 1.0 · {t.footer.builtWith}
+          {t.footer.builtWith}
         </p>
       </div>
     </footer>

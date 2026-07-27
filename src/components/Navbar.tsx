@@ -2,6 +2,7 @@
 
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useTheme } from "@/lib/theme/ThemeContext";
+import { useDocControl } from "@/lib/docControl/DocControlContext";
 
 const sections = [
   { href: "#whoami", index: "01", key: "whoami" as const },
@@ -12,17 +13,18 @@ const sections = [
 export default function Navbar() {
   const { locale, toggleLocale, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
+  const { shortHash } = useDocControl();
 
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-panel">
-      <div className="mx-auto max-w-5xl px-6">
+      <div className="mx-auto max-w-6xl px-6 2xl:max-w-[2368px]">
         <div className="flex items-center justify-between border-b border-line py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] text-ink-muted">
           <span>{t.nav.brandName} — Technical Dossier</span>
-          <span>Rev. 1.0 · {locale.toUpperCase()}</span>
+          <span>Rev. {shortHash} · {locale.toUpperCase()}</span>
         </div>
 
         <nav className="flex items-center justify-between py-4">
-          <a href="#whoami" className="text-base font-semibold tracking-tight text-ink">
+          <a href="#hero" className="text-base font-medium tracking-tight text-ink">
             {t.nav.brandName}
           </a>
 

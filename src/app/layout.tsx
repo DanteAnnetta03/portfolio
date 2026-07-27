@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Public_Sans, Space_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import { getDocControl } from "@/lib/docControl";
 
-const plexSans = IBM_Plex_Sans({
-  variable: "--font-plex-sans",
-  weight: ["400", "500", "600", "700"],
+const publicSans = Public_Sans({
+  variable: "--font-public-sans",
+  weight: ["400", "500"],
   subsets: ["latin"],
 });
 
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
-  weight: ["400", "500", "600"],
+// Space Mono only ships 400/700 — never needs the 400/500 jump reserved for
+// Public Sans, since mono type is already distinguished by color/tracking/case.
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
+  weight: ["400"],
   subsets: ["latin"],
 });
 
@@ -38,10 +41,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const docControl = getDocControl();
+
   return (
     <html
       lang="es"
-      className={`${plexSans.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${publicSans.variable} ${spaceMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -50,7 +55,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="min-h-full flex flex-col bg-paper text-ink">
-        <Providers>{children}</Providers>
+        <Providers docControl={docControl}>{children}</Providers>
       </body>
     </html>
   );

@@ -10,8 +10,8 @@
  * never raw hex values, so both themes stay in sync automatically.
  */
 @theme inline {
-  --font-sans: var(--font-plex-sans);
-  --font-mono: var(--font-plex-mono);
+  --font-sans: var(--font-public-sans);
+  --font-mono: var(--font-space-mono);
 
   --color-paper: var(--color-paper-value);
   --color-panel: var(--color-panel-value);
@@ -38,6 +38,16 @@
   --color-red-value: #a84a36;
   --color-orange-value: #b86a2e;
   --color-green-value: #697a66;
+
+  /* Halftone/retinado — offset-print dot simulated over photographic images
+     only (see .halftone-frame). Intentionally theme-independent: a fixed
+     literal (not a --color-*-value reference, which would flip with the
+     theme) so the dots render identically in light and dark — the photo
+     itself doesn't change with the site's theme, so neither should this. */
+  --halftone-dot: #7fa1be;
+  --halftone-blend: screen;
+  --halftone-opacity: 0.28;
+  --halftone-size: 4.2px;
 }
 
 /* Blueprint variant: same roles, engineering-drawing palette. */
@@ -53,6 +63,8 @@
   --color-red-value: #c97a61;
   --color-orange-value: #d89a5d;
   --color-green-value: #8fa68c;
+
+  /* Halftone tokens are intentionally NOT overridden here — see :root. */
 }
 
 body {
@@ -64,4 +76,48 @@ h1,
 h2,
 h3 {
   letter-spacing: -0.01em;
+}
+
+/* Keyboard focus is never optional — same accent everywhere, no per-component
+   overrides needed. */
+:focus-visible {
+  outline: 2px solid var(--color-blue-value);
+  outline-offset: 2px;
+}
+
+/* One uniform fade-in for the whole page on load — never staggered, never
+   per-section (that would read as a "reveal" effect, which this system
+   deliberately avoids). */
+@media (prefers-reduced-motion: no-preference) {
+  body {
+    animation: page-fade-in 0.4s ease-out;
+  }
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Halftone/retinado — a thin offset-print dot layer over photographic images
+   only (profile photo, project figures). Never extends past the image's own
+   1px frame: the dot is drawn inside this same element via ::after with
+   overflow:hidden, so it's always contained exactly at the border. */
+.halftone-frame {
+  position: relative;
+  overflow: hidden;
+}
+.halftone-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--halftone-dot) 0.6px, transparent 0.6px);
+  background-size: var(--halftone-size) var(--halftone-size);
+  mix-blend-mode: var(--halftone-blend);
+  opacity: var(--halftone-opacity);
+  pointer-events: none;
 }
