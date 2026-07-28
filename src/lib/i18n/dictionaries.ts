@@ -12,9 +12,7 @@ export const dictionaries = {
       achievements: "Logros",
       projects: "Proyectos",
       brandName: "Dante Annetta",
-    },
-    hero: {
-      date: "Fecha",
+      dossier: "Dossier Técnico",
     },
     whoami: {
       heading: "Sobre mí",
@@ -88,9 +86,7 @@ export const dictionaries = {
       achievements: "Achievements",
       projects: "Projects",
       brandName: "Dante Annetta",
-    },
-    hero: {
-      date: "Date",
+      dossier: "Technical Dossier",
     },
     whoami: {
       heading: "About me",

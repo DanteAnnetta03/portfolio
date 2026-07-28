@@ -63,13 +63,13 @@ Se usan **exclusivamente** para codificar información real, nunca decorativamen
 - Sin tipografía decorativa ni display fonts grandes. Ambas gratuitas vía Google Fonts.
 
 **Escala y jerarquía** (para evitar el efecto "CV"):
-- Escala general contenida, con **una única excepción deliberada por vista**: un salto de tamaño audaz en el hero (nombre en el title-block) o en un número clave de un dato en vivo.
+- Escala general contenida en todos lados — **sin excepción de salto de tamaño audaz** (había una reservada para el Hero/title-block; se eliminó junto con esa sección, 2026-07-28, y no se trasladó a ningún otro elemento — ver punto 6, nota de navBar).
 - Dos pesos: regular (400) y medium (500) — nunca bold/700.
 - Mayúsculas reservadas a mono type en labels/metadata (`DOC 01-A`, `FIG. 02`) — el cuerpo en Sans siempre en oración normal.
 
 | Elemento | Familia | Notas |
 |---|---|---|
-| Nombre / título hero | Public Sans, 500 | el salto de escala grande |
+| Nombre de marca (navBar) | Public Sans, 500 | `text-2xl` — el texto más grande del sitio, pero dentro de la escala contenida, no una excepción |
 | Cuerpo / bio / descripciones | Public Sans, 400 | line-height generoso, ancho topeado |
 | Control de documento / numeración | Space Mono | azul técnico, tracking amplio |
 | Metadata (fechas, rev, escala) | Space Mono | texto secundario |
@@ -144,10 +144,11 @@ Capa fina de puntos sobre toda imagen fotográfica del sitio (retrato, capturas,
 
 ## 6. Componentes por sección
 
-**Hero / title-block** (`DOC 00`):
-- Carátula de plano técnico: nombre en el salto de escala grande, rol como subtítulo mono, metadata a la derecha (`FECHA`, real — del último commit).
-- Bloque de control de documento arriba de todo (texto plano, sin link — ver punto 4).
-- Sin foto de perfil grande de fondo — si hay foto, chica, con su frame de retinado, no protagonista.
+**NavBar** (chrome persistente, no es una "sección" con su propio DOC):
+- Eliminado el Hero/title-block (`DOC 00`, 2026-07-28) — no aportaba información que no estuviera ya en la navBar (nombre, REV/hash) o en "Sobre mí" (rol, en la primera línea de la bio). La navBar absorbió su rol de identificación.
+- Nombre de marca a `text-2xl` (antes `text-base`) y la fila principal con más padding vertical (`py-6`) — más presencia que antes, pero sin reproducir el salto de escala grande que tenía el Hero (ver punto 3): el objetivo era aligerar la parte superior del sitio, no trasladarle el mismo peso visual a otro elemento.
+- Barra superior (masthead): antes repetía el nombre (`{nombre} — Technical Dossier`, y "Technical Dossier" quedaba sin traducir en español); ahora solo `Technical Dossier`/`Dossier Técnico` — el nombre ya aparece una sola vez, en la fila principal.
+- La fecha de build (`FECHA`) que mostraba el Hero no se reemplaza en ningún otro lugar — el REV/hash de la navBar ya cumple el rol de "dato real de build" visible.
 
 **Sobre mí**:
 - Bio corta, ancho topeado, tono aspiracional puntual sin lenguaje de marketing.
@@ -180,7 +181,6 @@ Los gráficos con datos en tiempo real **no** se empaquetan dentro de "Sobre mí
 
 Orden de referencia (ejemplo, no fijo) — refleja el estado real implementado:
 ```
-DOC 00     — Hero
 DOC 01     — Sobre mí — bio + foto
 DOC 02     — insight: actividad GitHub
 DOC 03     — Logros — timeline
