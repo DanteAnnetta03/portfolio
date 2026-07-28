@@ -31,6 +31,15 @@ export const dictionaries = {
       statYears: "Años activo",
       figureCaption: "Fig. 01 — Fotografía o ilustración de perfil.",
     },
+    github: {
+      heading: "Actividad en GitHub",
+      deck: "Historial de contribuciones del último año, en vivo en cada visita.",
+      contributions: "contribuciones",
+      totalSuffix: "en el último año",
+      less: "Menos",
+      more: "Más",
+      syncing: "Sincronizando con GitHub…",
+    },
     achievements: {
       heading: "Logros",
       deck: "Registro cronológico de hitos relevantes.",
@@ -90,6 +99,15 @@ export const dictionaries = {
       statAchievements: "Achievements",
       statYears: "Years active",
       figureCaption: "Fig. 01 — Profile photo or illustration.",
+    },
+    github: {
+      heading: "GitHub Activity",
+      deck: "Contribution history for the last year, live on every visit.",
+      contributions: "contributions",
+      totalSuffix: "in the last year",
+      less: "Less",
+      more: "More",
+      syncing: "Syncing with GitHub…",
     },
     achievements: {
       heading: "Achievements",

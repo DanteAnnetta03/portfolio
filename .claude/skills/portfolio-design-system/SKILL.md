@@ -47,6 +47,7 @@ Se usan **exclusivamente** para codificar información real, nunca decorativamen
 - Aparecen como elementos pequeños — puntos de 5-6px, texto de valor puntual — nunca como fondos de card ni superficies grandes.
 - Mapeo semántico: verde = estado positivo/resuelto/en producción · naranja = severidad media/atención/en curso · rojo = severidad alta o crítica/bloqueante.
 - Un mismo color mantiene su significado en **todo el sitio** — no hay dos sistemas de color funcional paralelos.
+- **Excepción documentada (2026-07-27)**: `DOC 02` (calendario de actividad de GitHub, punto 7) reutiliza el mismo verde funcional como escala secuencial de *intensidad de actividad*, no de estado. Decisión explícita del usuario — prevalece sobre la regla de "un significado por color" para este caso puntual. No extender a otros insights sin la misma confirmación explícita.
 
 ### Paleta de retinado (ver punto 5)
 
@@ -92,13 +93,13 @@ Se usan **exclusivamente** para codificar información real, nunca decorativamen
 En vez de números de sección "limpios" (que leen como el patrón genérico de IA), cada sección/sector lleva un identificador real:
 
 ```
-DOC 0{sección}-{sub} · REV {commits totales} · {hash corto}
+DOC 0{n}[-{sub}]
 ```
-Ejemplo: `DOC 03-A · REV 342 · a3f9c1`
+Ejemplo: `DOC 02`, `DOC 04-A`
 
-- `REV` se alimenta del **conteo real de commits** (o hash corto del último commit) del repo del portfolio vía API de GitHub — no es un valor fijo puesto a mano.
-- **Easter egg**: el bloque es cliqueable/hoverable — lleva al commit específico en GitHub. Funciona igual de bien como metadata pasiva para quien no lo note.
-- Se consulta con revalidación periódica cacheada (no en cada render).
+- Secuencial en todo el sitio, sectores de insight incluidos — un insight toma el siguiente número entero de la secuencia igual que una sección narrativa, **no** un sub-letra forzado. El sub-letra (`-A`, `-B`) queda solo para un sub-ítem real dentro de otra sección (ej. el proyecto destacado dentro de Proyectos), nunca como convención obligatoria para insights.
+- **Texto plano, sin link** (decisión explícita del usuario, 2026-07-28 — el click-through a un commit específico de GitHub no aportaba información real al lector; se descartó ese easter egg). `DocControl` es un `<span>`, no un `<a>`.
+- `REV {hash corto}` se muestra **una sola vez, en el masthead del Navbar** (`Rev. {hash} · {locale}`) — no se repite en cada sección, ver `src/components/Navbar.tsx`.
 - Este es el **único** sistema de referencia documental del sitio (se descartó un sistema paralelo tipo "File ref P.01" por redundante — ver punto 9).
 
 ## 5. Retinado / halftone en imágenes
@@ -144,8 +145,8 @@ Capa fina de puntos sobre toda imagen fotográfica del sitio (retrato, capturas,
 ## 6. Componentes por sección
 
 **Hero / title-block** (`DOC 00`):
-- Carátula de plano técnico: nombre en el salto de escala grande, rol como subtítulo mono, tabla de metadata a la derecha (`ESCALA`, `FECHA`, `HOJA`).
-- Bloque de control de documento arriba de todo, con el easter egg del commit.
+- Carátula de plano técnico: nombre en el salto de escala grande, rol como subtítulo mono, metadata a la derecha (`FECHA`, real — del último commit).
+- Bloque de control de documento arriba de todo (texto plano, sin link — ver punto 4).
 - Sin foto de perfil grande de fondo — si hay foto, chica, con su frame de retinado, no protagonista.
 
 **Sobre mí**:
@@ -171,21 +172,21 @@ Capa fina de puntos sobre toda imagen fotográfica del sitio (retrato, capturas,
 
 Los gráficos con datos en tiempo real **no** se empaquetan dentro de "Sobre mí": son sectores independientes intercalados entre las secciones narrativas, para ganar heterogeneidad de ritmo.
 
-- Cada sector lleva su propio control de documento (`DOC 0{n}-{sub}`).
+- Cada sector lleva su propio control de documento (`DOC 0{n}`, el siguiente entero de la secuencia — sin sub-letra, ver punto 4).
 - Se distingue de una sección narrativa por estar **enmarcado** (borde de 1px en los 4 lados) — las secciones narrativas fluyen sin marco propio. Esa diferencia es la señal "esto es un dato, no prosa".
 - Corto por naturaleza: un dato o dos, su gráfico, nada de texto largo.
 - **Regla de alternancia**: nunca dos sectores de insight consecutivos — siempre una sección narrativa entre medio.
 - **Cantidad total recomendada**: 2-3 para un portfolio de este tamaño. Más que eso y el sitio se lee como dashboard en vez de documento con datos insertados.
 
-Orden de referencia (ejemplo, no fijo):
+Orden de referencia (ejemplo, no fijo) — refleja el estado real implementado:
 ```
 DOC 00     — Hero
-Sobre mí   — bio + foto
-DOC 02-A   — insight: actividad GitHub
-Logros     — timeline
-DOC 02-B   — insight: stack tecnológico
-Proyectos  — comparativo
-Destacado  — con insight propio si aplica
+DOC 01     — Sobre mí — bio + foto
+DOC 02     — insight: actividad GitHub
+DOC 03     — Logros — timeline
+DOC 0{n}   — insight: stack tecnológico (roadmap, número real a definir cuando se construya)
+DOC 04     — Proyectos — comparativo
+DOC 04-A   — Destacado — sub-ítem de Proyectos, no un sector de insight
 ```
 
 **Cómo se suman insights futuros**: no hay lista pre-planeada. Cada vez que se agregue uno nuevo: (1) completar la especificación del punto 7, (2) indicar explícitamente entre qué sectores existentes va, respetando la regla de alternancia, (3) actualizar la numeración de control de documento según su posición real.
@@ -198,7 +199,7 @@ Esto es lo que le da vida real al sitio — no la ilustración estática.
 
 | Campo | Qué responde |
 |---|---|
-| Identificador | `DOC 0{n}-{sub}` |
+| Identificador | `DOC 0{n}` (siguiente entero de la secuencia; `-{sub}` solo si es un sub-ítem de otra sección) |
 | Pregunta que responde | Qué debe entender el lector con un vistazo |
 | Fuente de datos | API/origen concreto, pública/autenticada/scraping |
 | Frecuencia de actualización | En vivo / cacheado con revalidación cada X / build-time |
@@ -208,13 +209,14 @@ Esto es lo que le da vida real al sitio — no la ilustración estática.
 
 ### Insights actuales
 
-**`DOC 02-A` — Actividad de GitHub**
+**`DOC 02` — Actividad de GitHub**
 - Pregunta: ¿qué tan activo estoy escribiendo código, y cuándo?
-- Fuente: API de GitHub (contribuciones/commits), revalidación periódica cacheada.
-- Codificación visual: **se replica la estructura exacta del gráfico original de GitHub** (grilla semana × día, labels de mes arriba, labels de día a la izquierda, leyenda "menos → más") — pero el color de intensidad se resuelve con una **escala de 5 tonos del azul técnico** (`panel` → `blue`) en vez del verde de GitHub. Nunca el verde de marca.
-- Estado: `implementado` (prototipado).
+- Fuente: API GraphQL de GitHub (`contributionsCollection`), incluye repos privados y de organización además de públicos (decisión explícita del usuario, 2026-07-27). Requiere un PAT **clásico** con scope `read:user` — un fine-grained PAT no sirve para esto: solo puede tener un resource owner (cuenta personal o una org, nunca ambos), así que nunca ve las dos fuentes en un mismo token.
+- Frecuencia: **en vivo, en cada visita** (decisión explícita del usuario, no cacheado) — se consulta desde un Route Handler dedicado (`/api/github/contributions`, `runtime="nodejs"`, `dynamic="force-dynamic"`) llamado por el componente cliente, nunca desde el build ni desde un Server Component de la página. Esto mantiene el resto del sitio 100% estático (el fetch dinámico está aislado a esta única ruta, no vuelve dinámica a `/`).
+- Codificación visual: **se replica la estructura exacta del gráfico original de GitHub** (grilla semana × día, labels de mes arriba, labels de día a la izquierda, leyenda "menos → más") — escala de 5 tonos con el **verde funcional del sistema** (`panel-2` → `green`, ver excepción documentada en el punto 2), no el verde de marca de GitHub (tono distinto, mate en vez de saturado).
+- Estado: `implementado`.
 
-**`DOC 02-B` — Frecuencia de stack tecnológico**
+**`DOC 0{n}` — Frecuencia de stack tecnológico** (número real a asignar según su posición cuando se construya)
 - Pregunta: ¿qué tecnologías uso, y con qué frecuencia entre proyectos?
 - Fuente: metadata de proyectos propios (manual o parseada de repos).
 - Codificación visual: cada tecnología como fila/barra; frecuencia = longitud de barra en densidad de punto (retinado multi-tono — ver excepción abajo). Categoría de tecnología usa color funcional como marca puntual, no como fondo.
@@ -248,7 +250,7 @@ Recurso secundario y acotado:
 
 **Dónde sí anima**:
 - Sectores de insight actualizándose: crossfade corto de valor viejo a nuevo — nunca un contador que cuenta hacia arriba.
-- Hover en elementos cliqueables reales (control de documento, links, filas de tabla): cambio de color/borde sutil, sin scale ni desplazamiento.
+- Hover en elementos cliqueables reales (links, filas de tabla — el control de documento ya **no** es uno de ellos, ver punto 4): cambio de color/borde sutil, sin scale ni desplazamiento.
 - Foco de teclado: siempre visible, no negociable.
 - Carga inicial: fade-in breve y uniforme de toda la página, nunca escalonado ni con desplazamiento.
 

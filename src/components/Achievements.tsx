@@ -12,7 +12,7 @@ export default function Achievements() {
       id="achievements"
       className="mx-auto max-w-6xl scroll-mt-24 border-t border-line px-6 py-16 md:py-20"
     >
-      <SectionHeading docId="02" title={t.achievements.heading} deck={t.achievements.deck} />
+      <SectionHeading docId="03" title={t.achievements.heading} deck={t.achievements.deck} />
 
       <ol className="mt-12 border-l border-line">
         {achievements.map((achievement, i) => (

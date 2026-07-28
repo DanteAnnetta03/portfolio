@@ -1,10 +1,6 @@
-"use client";
-
-import { useDocControl } from "@/lib/docControl/DocControlContext";
-
-// Per-section reference: just "DOC {id}", still an easter egg (links to the
-// exact commit on GitHub). The REV/hash itself is shown once, in the Navbar
-// only — repeating it on every section added noise without adding meaning.
+// Per-section reference: plain "DOC {id}" metadata. Not a link — the earlier
+// click-through-to-commit easter egg was removed as an unwanted feature that
+// added no real information for a reader (explicit decision, 2026-07-28).
 export default function DocControl({
   id,
   className = "text-sm",
@@ -12,17 +8,5 @@ export default function DocControl({
   id: string;
   className?: string;
 }) {
-  const { shortHash, commitUrl } = useDocControl();
-
-  return (
-    <a
-      href={commitUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`font-mono text-blue transition-colors hover:text-ink ${className}`}
-      title={`Ver commit ${shortHash} en GitHub`}
-    >
-      DOC {id}
-    </a>
-  );
+  return <span className={`font-mono text-blue ${className}`}>DOC {id}</span>;
 }

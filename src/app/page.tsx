@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import WhoAmI from "@/components/WhoAmI";
+import GithubActivity from "@/components/GithubActivity";
 import Achievements from "@/components/Achievements";
 import Projects from "@/components/Projects";
 import Footer from "@/components/Footer";
@@ -24,6 +25,7 @@ export default function Home() {
         <div className="2xl:mx-auto 2xl:grid 2xl:max-w-[2368px] 2xl:grid-cols-2 2xl:items-start 2xl:gap-x-8">
           <div>
             <WhoAmI />
+            <GithubActivity />
             <Achievements />
           </div>
           <div className="2xl:border-l 2xl:border-line 2xl:pl-8">

@@ -1,11 +1,7 @@
 import { execSync } from "node:child_process";
 
-// The site's own repo — used to build the "view this commit" easter-egg link.
-const SITE_REPO = "DanteAnnetta03/portfolio";
-
 export type DocControl = {
   shortHash: string;
-  commitUrl: string;
   commitDate: string; // ISO 8601
 };
 
@@ -33,7 +29,6 @@ export function getDocControl(): DocControl {
   const fullHash = resolveFullHash();
   return {
     shortHash: fullHash.slice(0, 7),
-    commitUrl: `https://github.com/${SITE_REPO}/commit/${fullHash}`,
     commitDate: resolveCommitDate(),
   };
 }

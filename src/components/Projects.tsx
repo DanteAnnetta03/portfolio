@@ -38,7 +38,7 @@ export default function Projects() {
       id="projects"
       className="mx-auto max-w-6xl scroll-mt-24 border-t border-line px-6 py-16 md:py-20 2xl:border-t-0"
     >
-      <SectionHeading docId="03" title={t.projects.heading} deck={t.projects.deck} />
+      <SectionHeading docId="04" title={t.projects.heading} deck={t.projects.deck} />
 
       {/* Comparison table — scan all entries at a glance. */}
       <p className="mt-10 font-mono text-[11px] uppercase tracking-wide text-ink-muted">
@@ -127,7 +127,7 @@ export default function Projects() {
             <p className="font-mono text-[11px] uppercase tracking-wide text-blue">
               {t.projects.featuredLabel}
             </p>
-            <DocControl id="03-A" className="text-[11px] uppercase tracking-wide" />
+            <DocControl id="04-A" className="text-[11px] uppercase tracking-wide" />
           </div>
 
           <div className="grid gap-8 p-6 sm:p-8 md:grid-cols-2 md:gap-10">
