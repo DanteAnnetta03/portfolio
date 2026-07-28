@@ -184,9 +184,10 @@ DOC 00     — Hero
 DOC 01     — Sobre mí — bio + foto
 DOC 02     — insight: actividad GitHub
 DOC 03     — Logros — timeline
-DOC 0{n}   — insight: stack tecnológico (roadmap, número real a definir cuando se construya)
 DOC 04     — Proyectos — comparativo
 DOC 04-A   — Destacado — sub-ítem de Proyectos, no un sector de insight
+DOC 05     — insight: frecuencia de stack tecnológico (dentro de la columna
+             derecha, debajo de Proyectos y su destacado — no full-width)
 ```
 
 **Cómo se suman insights futuros**: no hay lista pre-planeada. Cada vez que se agregue uno nuevo: (1) completar la especificación del punto 7, (2) indicar explícitamente entre qué sectores existentes va, respetando la regla de alternancia, (3) actualizar la numeración de control de documento según su posición real.
@@ -194,6 +195,8 @@ DOC 04-A   — Destacado — sub-ítem de Proyectos, no un sector de insight
 ## 7. Gráficos en vivo (datos en tiempo real)
 
 Esto es lo que le da vida real al sitio — no la ilustración estática.
+
+**Voz del copy (epígrafes, decks)**: siempre neutra, tercera persona — nunca "tu cuenta"/"tus contribuciones" ni ningún otro que se dirija al lector como si fuera el dueño del sitio. El dueño del sitio es quien presenta esta información a otras personas, no quien la recibe (decisión explícita del usuario, 2026-07-28). Describir el dato ("bytes de código por lenguaje en repositorios con contribuciones"), no narrar el proceso de obtenerlo en segunda persona.
 
 ### Especificación de un insight (completar antes de construir cualquiera, presente o futuro)
 
@@ -216,15 +219,18 @@ Esto es lo que le da vida real al sitio — no la ilustración estática.
 - Codificación visual: **se replica la estructura exacta del gráfico original de GitHub** (grilla semana × día, labels de mes arriba, labels de día a la izquierda, leyenda "menos → más") — escala de 5 tonos con el **verde funcional del sistema** (`panel-2` → `green`, ver excepción documentada en el punto 2), no el verde de marca de GitHub (tono distinto, mate en vez de saturado).
 - Estado: `implementado`.
 
-**`DOC 0{n}` — Frecuencia de stack tecnológico** (número real a asignar según su posición cuando se construya)
-- Pregunta: ¿qué tecnologías uso, y con qué frecuencia entre proyectos?
-- Fuente: metadata de proyectos propios (manual o parseada de repos).
-- Codificación visual: cada tecnología como fila/barra; frecuencia = longitud de barra en densidad de punto (retinado multi-tono — ver excepción abajo). Categoría de tecnología usa color funcional como marca puntual, no como fondo.
-- Estado: `roadmap`.
+**`DOC 05` — Frecuencia de stack tecnológico**
+- Pregunta: ¿qué tecnologías uso, y con qué frecuencia, medido por mi actividad real (no una lista puesta a mano)?
+- Fuente: misma API GraphQL que `DOC 02`. `contributionsCollection.commitContributionsByRepository` da el peso por repo (días con commits del usuario en el último año — proxy barato de "cuánto aporté ahí", no el conteo literal de commits), y `repository.languages` el desglose en bytes por lenguaje de cada uno. El peso de cada repo se reparte entre sus lenguajes proporcional al tamaño en bytes (excluyendo del total los lenguajes filtrados, no solo del listado — ver abajo), se suma entre repos y se normaliza 0-100 contra el máximo. Un solo request GraphQL, sin N+1 por repo. Nombres de lenguaje que el linguist de GitHub separa pero son la misma tecnología (`Dockerfile` → `Docker`) se unifican antes de agregar — ver `LANGUAGE_ALIASES` en `src/lib/github/index.ts`.
+- **Filtro de relevancia (2026-07-28)**: `Shell`, `Makefile`, `Docker`/`Dockerfile` y `Batchfile` se excluyen — son archivos de infraestructura/build que el linguist detecta como "lenguaje" pero no son stack real (decisión explícita del usuario). No es un umbral numérico (ni por bytes crudos ni por score): un umbral habría descartado también `CSS`/`JavaScript`, que sí son stack real aunque tengan valores bajos. Lista curada en `STACK_EXCLUDE`, `src/lib/github/index.ts` — extender ahí si aparece otro caso, no inventar una regla numérica.
+- **Nota de scope (2026-07-28)**: a diferencia de `DOC 02`, acá `read:user` **no alcanza** para incluir repos privados/de organización — el conteo agregado del calendario no necesita resolver el objeto `Repository`, pero leer `languages` sí, y eso exige que el token tenga lectura real sobre ese repo específico. Con solo `read:user` este insight cae de vuelta a "solo públicos" aunque el calendario (`DOC 02`) ya vea todo. Para que ambos coincidan en alcance hace falta el scope clásico `repo` (de lectura/escritura — un clásico no tiene un "repo read-only" separado).
+- Frecuencia: en vivo en cada visita, misma ventana de 1 año que `DOC 02` (decisión explícita del usuario, 2026-07-28 — consistencia entre ambos insights) — `/api/github/stack`, mismo patrón de Route Handler dinámico aislado que `DOC 02`.
+- Codificación visual: **barra sólida horizontal** con el azul técnico del sistema (decisión explícita del usuario — se descartó la opción de retinado multi-tono bocetada originalmente acá, ver excepción del punto siguiente). Ordenadas de mayor a menor, top 8 tecnologías.
+- Estado: `implementado`.
 
-### Excepción de retinado multi-tono
+### Excepción de retinado multi-tono (no usada actualmente)
 
-La densidad de punto variable (4 niveles de tono con un solo color de tinta) es la **única** situación donde el retinado multi-tono aplica como codificación de datos — distinto del retinado uniforme y sutil de fotos (punto 5), porque acá la densidad *es* el dato, no una textura.
+La densidad de punto variable (4 niveles de tono con un solo color de tinta) sería la única situación donde el retinado multi-tono podría aplicar como codificación de datos — distinto del retinado uniforme y sutil de fotos (punto 5), porque ahí la densidad *sería* el dato, no una textura. Se bocetó pensando en `DOC 05`, pero al construirlo se optó por barra sólida en su lugar (más simple, decisión explícita del usuario). Mecanismo queda documentado por si un insight futuro lo justifica — ninguno lo usa hoy.
 
 ### Ilustración técnica (isométrica, exploded-view, figuras anotadas)
 

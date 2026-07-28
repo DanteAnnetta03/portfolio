@@ -33,7 +33,7 @@ export const dictionaries = {
     },
     github: {
       heading: "Actividad en GitHub",
-      deck: "Historial de contribuciones del último año, en vivo en cada visita.",
+      deck: "Historial de contribuciones del último año.",
       contributions: "contribuciones",
       totalSuffix: "en el último año",
       less: "Menos",
@@ -65,6 +65,13 @@ export const dictionaries = {
       architectureLabel: "Arquitectura",
       noteLabel: "Nota técnica",
       figureCaptionPrefix: "Fig. 02 —",
+    },
+    stack: {
+      heading: "Stack tecnológico",
+      deck: "Bytes de código por lenguaje en repositorios con contribuciones, ponderado por volumen de aportes — último año.",
+      repositories: "repositorios",
+      totalSuffix: "analizados · último año",
+      syncing: "Sincronizando con GitHub…",
     },
     footer: {
       rights: "Todos los derechos reservados.",
@@ -102,7 +109,7 @@ export const dictionaries = {
     },
     github: {
       heading: "GitHub Activity",
-      deck: "Contribution history for the last year, live on every visit.",
+      deck: "Contribution history for the last year.",
       contributions: "contributions",
       totalSuffix: "in the last year",
       less: "Less",
@@ -134,6 +141,13 @@ export const dictionaries = {
       architectureLabel: "Architecture",
       noteLabel: "Engineering note",
       figureCaptionPrefix: "Fig. 02 —",
+    },
+    stack: {
+      heading: "Tech Stack",
+      deck: "Bytes of code per language across repositories with contributions, weighted by contribution volume — last year.",
+      repositories: "repositories",
+      totalSuffix: "analyzed · last year",
+      syncing: "Syncing with GitHub…",
     },
     footer: {
       rights: "All rights reserved.",

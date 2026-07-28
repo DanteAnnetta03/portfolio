@@ -4,6 +4,7 @@ import WhoAmI from "@/components/WhoAmI";
 import GithubActivity from "@/components/GithubActivity";
 import Achievements from "@/components/Achievements";
 import Projects from "@/components/Projects";
+import StackFrequency from "@/components/StackFrequency";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -30,6 +31,7 @@ export default function Home() {
           </div>
           <div className="2xl:border-l 2xl:border-line 2xl:pl-8">
             <Projects />
+            <StackFrequency />
           </div>
         </div>
       </main>
