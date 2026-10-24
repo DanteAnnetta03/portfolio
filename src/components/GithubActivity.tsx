@@ -4,33 +4,32 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import DocControl from "@/components/DocControl";
 import VuMeter from "@/components/VuMeter";
-import type { ContributionCalendar, ContributionDay, ContributionLevel } from "@/lib/github";
+import type { ContributionCalendar, ContributionDay } from "@/lib/github";
 
-const WINDOW_DAYS = 14;
+const WINDOW_WEEKS = 12;
+const SEGMENTS = 10;
 
-// Días reales más recientes, no inventados — toma los últimos N días de la
-// misma respuesta de la API que antes alimentaba la grilla (calendar.weeks
-// ya viene en orden cronológico, semana por semana, día por día).
-function recentDays(calendar: ContributionCalendar, windowDays: number): ContributionDay[] {
-  return calendar.weeks.flat().slice(-windowDays);
+type WeekTotal = { total: number; weekStart: string };
+
+// Agregado por semana, no por día — a granularidad diaria, 14 columnas caen
+// casi todas en 0 para un patrón de commits bursty (días sueltos activos,
+// la mayoría en cero), que es exactamente lo que mostró el primer intento.
+// Sumando los 7 días de cada semana se suaviza esa dispersión sin inventar
+// nada: sigue siendo la cuenta real, solo con mejor granularidad para un
+// instrumento de pocas columnas. calendar.weeks ya viene agrupado así.
+function recentWeekTotals(calendar: ContributionCalendar, windowWeeks: number): WeekTotal[] {
+  return calendar.weeks.slice(-windowWeeks).map((week) => ({
+    total: week.reduce((sum: number, d: ContributionDay) => sum + d.count, 0),
+    weekStart: week[0]?.date ?? "",
+  }));
 }
 
-// El `level` de cada día ya viene calculado por GitHub (cuantiles sobre el
-// año completo, el mismo valor que usaba la grilla anterior) — se usa tal
-// cual en vez de renormalizar contra el máximo de la ventana de 14 días:
-// esa renormalización local aplanaba a 0 cualquier día que no fuera el pico
-// absoluto reciente, perdiendo la variación real que el cuantil sí capta
-// (un día con 1-2 commits suele ya calificar FIRST_QUARTILE, no "nada").
-const LIT_BY_LEVEL: Record<ContributionLevel, number> = {
-  0: 0,
-  1: 3,
-  2: 5,
-  3: 7,
-  4: 10,
-};
-
-function litSegments(days: ContributionDay[]): number[] {
-  return days.map((d) => LIT_BY_LEVEL[d.level]);
+// Relativo al máximo de la ventana — con totales semanales (no diarios) una
+// semana sin ningún commit es información real ("semana floja"), no un
+// artefacto de ventana angosta.
+function litSegments(weeks: WeekTotal[]): number[] {
+  const max = Math.max(1, ...weeks.map((w) => w.total));
+  return weeks.map((w) => (w.total === 0 ? 0 : Math.max(1, Math.round((w.total / max) * SEGMENTS))));
 }
 
 // Insight sector — DOC 02. Sits between "Sobre mí" (01) and "Logros" (03).
@@ -39,11 +38,10 @@ function litSegments(days: ContributionDay[]): number[] {
 //
 // Fetched client-side, on every visit — este fetch sigue traendo el año
 // completo de datos (misma API, sin cambios), pero desde el refactor visual
-// de 2026-10-24 solo se visualizan los últimos WINDOW_DAYS días como VU
-// meter — ver skill §7 para el porqué (la grilla semana×día no se
-// reemplazaba bien por un VU meter de pocas columnas sin perder
-// información; se optó por mostrar la ventana reciente como instrumento en
-// vez de forzar 365 días en 10-14 columnas).
+// de 2026-10-24 solo se visualizan las últimas WINDOW_WEEKS semanas como VU
+// meter — ver skill §7. Se probaron antes 14 días a granularidad diaria
+// (demasiado disperso, casi todo apagado) y el `level` por día (seguía
+// disperso): la agregación semanal fue lo que finalmente dio variación real.
 export default function GithubActivity() {
   const { t } = useLanguage();
   const [calendar, setCalendar] = useState<ContributionCalendar | null>(null);
@@ -74,9 +72,9 @@ export default function GithubActivity() {
 
   if (status === "error") return null;
 
-  const days = calendar ? recentDays(calendar, WINDOW_DAYS) : [];
-  const values = litSegments(days);
-  const titles = days.map((d) => `${d.count} ${t.github.contributions} — ${d.date}`);
+  const weeks = calendar ? recentWeekTotals(calendar, WINDOW_WEEKS) : [];
+  const values = litSegments(weeks);
+  const titles = weeks.map((w) => `${w.total} ${t.github.contributions} — ${w.weekStart}`);
 
   return (
     <section id="github-activity" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-16 md:py-20">
@@ -112,7 +110,7 @@ export default function GithubActivity() {
             <div className="mt-6 transition-opacity duration-300">
               <VuMeter values={values} titles={titles} className="h-36 max-w-2xl" />
               <p className="mt-3 font-mono text-[10px] uppercase tracking-wide text-ink-muted">
-                {t.github.perDayCaption} · {t.github.recentWindow}
+                {t.github.perWeekCaption} · {t.github.recentWindow}
               </p>
             </div>
           )}
