@@ -140,7 +140,10 @@ export default function Projects() {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <Viewfinder className="h-full w-full">
+                    // blurPx=0 — esto es una captura de UI con texto chico,
+                    // no una foto; el blur ahí perjudica legibilidad real en
+                    // vez de evocar óptica suave (ver Viewfinder.tsx).
+                    <Viewfinder className="h-full w-full" blurPx={0}>
                       <Image
                         src={featured.imageUrl}
                         alt={featured.title}
@@ -197,12 +200,29 @@ export default function Projects() {
               )}
 
               <dl className="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-line pt-4 font-mono text-xs">
-                {featuredMeta.map((entry) => (
-                  <div key={entry.label}>
-                    <dt className="uppercase tracking-wide text-ink-muted">{entry.label}</dt>
-                    <dd className="mt-0.5 text-ink">{entry.value}</dd>
-                  </div>
-                ))}
+                {featuredMeta.map((entry) => {
+                  const isStatus = entry.label === t.projects.metaStatus;
+                  const isCategory = entry.label === t.projects.metaCategory;
+                  const statusKind: "attention" | "positive" = featured.inProgress
+                    ? "attention"
+                    : "positive";
+                  return (
+                    <div key={entry.label}>
+                      <dt className="uppercase tracking-wide text-ink-muted">{entry.label}</dt>
+                      <dd className="mt-0.5 flex items-center gap-2 text-ink">
+                        {isStatus && (
+                          <span
+                            className={`inline-block h-1.5 w-1.5 rounded-full ${functionalStatusDotClass[statusKind]} ${functionalStatusGlowClass[statusKind]}`}
+                          />
+                        )}
+                        {isCategory && (
+                          <span className="glow-blue inline-block h-1.5 w-1.5 rounded-full bg-blue" />
+                        )}
+                        {entry.value}
+                      </dd>
+                    </div>
+                  );
+                })}
               </dl>
 
               <div className="mt-1 flex gap-5 font-mono text-xs uppercase tracking-wide">
