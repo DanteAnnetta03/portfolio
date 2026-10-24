@@ -4,10 +4,9 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import DocControl from "@/components/DocControl";
 import VuMeter from "@/components/VuMeter";
-import type { ContributionCalendar, ContributionDay } from "@/lib/github";
+import type { ContributionCalendar, ContributionDay, ContributionLevel } from "@/lib/github";
 
 const WINDOW_DAYS = 14;
-const SEGMENTS = 10;
 
 // Días reales más recientes, no inventados — toma los últimos N días de la
 // misma respuesta de la API que antes alimentaba la grilla (calendar.weeks
@@ -16,12 +15,22 @@ function recentDays(calendar: ContributionCalendar, windowDays: number): Contrib
   return calendar.weeks.flat().slice(-windowDays);
 }
 
-// Normaliza cada día contra el máximo de la ventana — un día con actividad
-// real nunca queda en 0 segmentos (se ve apagado del todo = "sin actividad",
-// que es distinto de "poca actividad").
+// El `level` de cada día ya viene calculado por GitHub (cuantiles sobre el
+// año completo, el mismo valor que usaba la grilla anterior) — se usa tal
+// cual en vez de renormalizar contra el máximo de la ventana de 14 días:
+// esa renormalización local aplanaba a 0 cualquier día que no fuera el pico
+// absoluto reciente, perdiendo la variación real que el cuantil sí capta
+// (un día con 1-2 commits suele ya calificar FIRST_QUARTILE, no "nada").
+const LIT_BY_LEVEL: Record<ContributionLevel, number> = {
+  0: 0,
+  1: 3,
+  2: 5,
+  3: 7,
+  4: 10,
+};
+
 function litSegments(days: ContributionDay[]): number[] {
-  const max = Math.max(1, ...days.map((d) => d.count));
-  return days.map((d) => (d.count === 0 ? 0 : Math.max(1, Math.round((d.count / max) * SEGMENTS))));
+  return days.map((d) => LIT_BY_LEVEL[d.level]);
 }
 
 // Insight sector — DOC 02. Sits between "Sobre mí" (01) and "Logros" (03).
