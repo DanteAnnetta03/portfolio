@@ -31,11 +31,11 @@ export const dictionaries = {
     },
     github: {
       heading: "Actividad en GitHub",
-      deck: "Historial de contribuciones del último año.",
+      deck: "Commits día por día, medidos en vivo.",
       contributions: "contribuciones",
       totalSuffix: "en el último año",
-      less: "Menos",
-      more: "Más",
+      perDayCaption: "Commits por día",
+      recentWindow: "Últ. 14 días",
       syncing: "Sincronizando con GitHub…",
     },
     achievements: {
@@ -105,11 +105,11 @@ export const dictionaries = {
     },
     github: {
       heading: "GitHub Activity",
-      deck: "Contribution history for the last year.",
+      deck: "Day-by-day commit activity, measured live.",
       contributions: "contributions",
       totalSuffix: "in the last year",
-      less: "Less",
-      more: "More",
+      perDayCaption: "Commits per day",
+      recentWindow: "Last 14 days",
       syncing: "Syncing with GitHub…",
     },
     achievements: {
