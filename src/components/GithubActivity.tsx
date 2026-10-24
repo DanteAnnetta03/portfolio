@@ -5,12 +5,15 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 import DocControl from "@/components/DocControl";
 import type { ContributionCalendar, ContributionLevel } from "@/lib/github";
 
+// Level 4 (the busiest days) gets a soft glow — the same connecting thread
+// used on status dots elsewhere, applied here as "this is the peak" rather
+// than inventing a new encoding. Visual identity exploration, 2026-10-24.
 const LEVEL_CLASS: Record<ContributionLevel, string> = {
   0: "bg-panel-2",
   1: "bg-green/25",
   2: "bg-green/50",
   3: "bg-green/75",
-  4: "bg-green",
+  4: "bg-green glow-green",
 };
 
 const CELL = 10;
@@ -95,7 +98,9 @@ export default function GithubActivity() {
 
   return (
     <section id="github-activity" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-16 md:py-20">
-      <div className="border border-line bg-panel">
+      {/* Glass — reserved for live-data sectors only (see globals.css
+          .glass-panel). Visual identity exploration, 2026-10-24. */}
+      <div className="glass-panel">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-line px-6 py-4 sm:px-8">
           <div className="flex items-baseline gap-x-4">
             <DocControl id="02" />

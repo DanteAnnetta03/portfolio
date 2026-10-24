@@ -9,3 +9,12 @@ export const functionalStatusDotClass: Record<FunctionalStatus, string> = {
   attention: "bg-orange",
   critical: "bg-red",
 };
+
+// Glow — the connecting thread between the glass-paneled live-data sectors
+// and the rest of the (otherwise flat) site. Same meaning, same color, just
+// a soft halo instead of a flat dot. Visual identity exploration, 2026-10-24.
+export const functionalStatusGlowClass: Record<FunctionalStatus, string> = {
+  positive: "glow-green",
+  attention: "glow-orange",
+  critical: "glow-red",
+};

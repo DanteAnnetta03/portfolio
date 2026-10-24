@@ -6,6 +6,7 @@ import { profile } from "@/data/profile";
 import { projects } from "@/data/projects";
 import { achievements } from "@/data/achievements";
 import SectionHeading from "@/components/SectionHeading";
+import Viewfinder from "@/components/Viewfinder";
 
 export default function WhoAmI() {
   const { locale, t } = useLanguage();
@@ -38,18 +39,26 @@ export default function WhoAmI() {
         <div className="@4xl:grid @4xl:grid-cols-[1fr_320px] @4xl:items-start @4xl:gap-16">
           <div className="grid gap-10 md:grid-cols-[160px_1fr] md:gap-14">
             <figure className="mx-auto w-32 shrink-0 md:mx-0 md:w-full">
-              <div
-                className={`aspect-square w-full border border-line bg-panel ${
-                  profile.avatarUrl.endsWith(".svg") ? "" : "halftone-frame"
-                }`}
-              >
-                <Image
-                  src={profile.avatarUrl}
-                  alt={profile.name}
-                  width={160}
-                  height={160}
-                  className="h-full w-full object-cover"
-                />
+              <div className="aspect-square w-full border border-line bg-panel">
+                {profile.avatarUrl.endsWith(".svg") ? (
+                  <Image
+                    src={profile.avatarUrl}
+                    alt={profile.name}
+                    width={160}
+                    height={160}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <Viewfinder className="h-full w-full">
+                    <Image
+                      src={profile.avatarUrl}
+                      alt={profile.name}
+                      width={160}
+                      height={160}
+                      className="h-full w-full object-cover"
+                    />
+                  </Viewfinder>
+                )}
               </div>
               <figcaption className="mt-2 font-mono text-[11px] uppercase tracking-wide text-ink-muted">
                 {t.whoami.figureCaption}

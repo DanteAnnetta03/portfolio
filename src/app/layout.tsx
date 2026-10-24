@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
-import { Public_Sans, Space_Mono } from "next/font/google";
+import { IBM_Plex_Sans, Space_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import { getDocControl } from "@/lib/docControl";
 
-const publicSans = Public_Sans({
-  variable: "--font-public-sans",
+// Replaces Public Sans — "Ledger" typography pass (visual identity
+// exploration, 2026-10-24): IBM Plex Sans reads closer to a technical
+// manual/instrument nameplate than Public Sans' government-docs lineage.
+const plexSans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
   weight: ["400", "500"],
   subsets: ["latin"],
 });
@@ -46,7 +49,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${publicSans.variable} ${spaceMono.variable} h-full antialiased`}
+      className={`${plexSans.variable} ${spaceMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

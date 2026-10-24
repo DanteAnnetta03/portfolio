@@ -5,7 +5,8 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { projects, type Project } from "@/data/projects";
 import SectionHeading from "@/components/SectionHeading";
 import DocControl from "@/components/DocControl";
-import { functionalStatusDotClass } from "@/lib/functionalColor";
+import Viewfinder from "@/components/Viewfinder";
+import { functionalStatusDotClass, functionalStatusGlowClass } from "@/lib/functionalColor";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 function buildMeta(project: Project, t: Dictionary) {
@@ -40,84 +41,80 @@ export default function Projects() {
     >
       <SectionHeading docId="04" title={t.projects.heading} deck={t.projects.deck} />
 
-      {/* Comparison table — scan all entries at a glance. */}
+      {/* Comparison — "ledger" record format: name + a single metadata line
+          below it, instead of a grid table. Same fields as before (status,
+          year, stack, category, links), just reflowed — visual identity
+          exploration, 2026-10-24. */}
       <p className="mt-10 font-mono text-[11px] uppercase tracking-wide text-ink-muted">
         {t.projects.overviewTitle}
       </p>
-      <div className="mt-3 overflow-x-auto border border-line">
-        <table className="w-full min-w-[640px] border-collapse text-left text-sm">
-          <thead>
-            <tr className="border-b border-line bg-panel-2 font-mono text-[11px] uppercase tracking-wide text-ink-muted">
-              <th className="px-4 py-3 font-medium">{t.projects.tableProject}</th>
-              <th className="px-4 py-3 font-medium">{t.projects.metaStatus}</th>
-              <th className="px-4 py-3 font-medium">{t.projects.metaYear}</th>
-              <th className="px-4 py-3 font-medium">{t.projects.metaStack}</th>
-              <th className="px-4 py-3 font-medium">{t.projects.metaCategory}</th>
-              <th className="px-4 py-3 font-medium">{t.projects.tableLinks}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {projects.map((p) => (
-              <tr
-                key={p.id}
-                className="border-b border-line transition-colors last:border-b-0 hover:bg-panel-2"
-              >
-                <td
-                  className={`px-4 py-3 font-medium text-ink ${
-                    p.id === featured?.id ? "border-l-2 border-l-blue" : ""
+      <div className="mt-3">
+        {projects.map((p) => {
+          const status: "attention" | "positive" = p.inProgress ? "attention" : "positive";
+          return (
+            <div key={p.id} className="border-b border-line py-4 last:border-b-0">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                <span
+                  className={`text-lg font-medium text-ink ${
+                    p.id === featured?.id ? "border-l-2 border-l-blue pl-3" : ""
                   }`}
                 >
                   {p.title}
-                </td>
-                <td className="px-4 py-3 text-ink-muted">
-                  <span className="flex items-center gap-2">
-                    <span
-                      className={`inline-block h-1.5 w-1.5 rounded-full ${functionalStatusDotClass[p.inProgress ? "attention" : "positive"]}`}
-                    />
-                    {p.inProgress ? t.projects.inProgress : t.projects.completed}
-                  </span>
-                </td>
-                <td className="px-4 py-3 font-mono text-ink-muted">{p.year ?? "—"}</td>
-                <td className="px-4 py-3 text-ink-muted">{p.tags.join(" / ")}</td>
-                <td className="px-4 py-3 text-ink-muted">
-                  {p.category ? (
-                    <span className="flex items-center gap-2">
-                      <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue" />
+                </span>
+                <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-wide text-ink-muted">
+                  <span
+                    className={`inline-block h-1.5 w-1.5 rounded-full ${functionalStatusDotClass[status]} ${functionalStatusGlowClass[status]}`}
+                  />
+                  {p.inProgress ? t.projects.inProgress : t.projects.completed}
+                </span>
+              </div>
+
+              <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-ink-muted">
+                <span>{p.tags.join(" / ")}</span>
+                {p.category && (
+                  <>
+                    <span aria-hidden="true">·</span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="glow-blue inline-block h-1.5 w-1.5 rounded-full bg-blue" />
                       {p.category}
                     </span>
-                  ) : (
-                    "—"
+                  </>
+                )}
+                {p.year && (
+                  <>
+                    <span aria-hidden="true">·</span>
+                    <span>{p.year}</span>
+                  </>
+                )}
+              </div>
+
+              {(p.liveUrl || p.repoUrl) && (
+                <div className="mt-2 flex gap-5 font-mono text-xs uppercase tracking-wide">
+                  {p.liveUrl && (
+                    <a
+                      href={p.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue transition-colors hover:text-ink"
+                    >
+                      → {t.projects.liveDemo}
+                    </a>
                   )}
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex gap-3 font-mono text-xs uppercase tracking-wide">
-                    {p.liveUrl && (
-                      <a
-                        href={p.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue transition-colors hover:text-ink"
-                      >
-                        {t.projects.liveDemo}
-                      </a>
-                    )}
-                    {p.repoUrl && (
-                      <a
-                        href={p.repoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue transition-colors hover:text-ink"
-                      >
-                        {t.projects.sourceCode}
-                      </a>
-                    )}
-                    {!p.liveUrl && !p.repoUrl && <span className="text-ink-muted">—</span>}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  {p.repoUrl && (
+                    <a
+                      href={p.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue transition-colors hover:text-ink"
+                    >
+                      → {t.projects.sourceCode}
+                    </a>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Featured deep-dive — the first entry gets the full treatment. */}
@@ -133,18 +130,26 @@ export default function Projects() {
           <div className="grid gap-8 p-6 sm:p-8 md:grid-cols-2 md:gap-10">
             <div className="flex flex-col gap-6">
               <figure>
-                <div
-                  className={`h-56 w-full border border-line sm:h-64 ${
-                    featured.imageUrl.endsWith(".svg") ? "" : "halftone-frame"
-                  }`}
-                >
-                  <Image
-                    src={featured.imageUrl}
-                    alt={featured.title}
-                    width={640}
-                    height={360}
-                    className="h-full w-full object-cover"
-                  />
+                <div className="h-56 w-full border border-line sm:h-64">
+                  {featured.imageUrl.endsWith(".svg") ? (
+                    <Image
+                      src={featured.imageUrl}
+                      alt={featured.title}
+                      width={640}
+                      height={360}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <Viewfinder className="h-full w-full">
+                      <Image
+                        src={featured.imageUrl}
+                        alt={featured.title}
+                        width={640}
+                        height={360}
+                        className="h-full w-full object-cover"
+                      />
+                    </Viewfinder>
+                  )}
                 </div>
                 <figcaption className="mt-2 font-mono text-[11px] uppercase tracking-wide text-ink-muted">
                   {t.projects.figureCaptionPrefix} {featured.title}

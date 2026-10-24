@@ -10,7 +10,7 @@
  * never raw hex values, so both themes stay in sync automatically.
  */
 @theme inline {
-  --font-sans: var(--font-public-sans);
+  --font-sans: var(--font-plex-sans);
   --font-mono: var(--font-space-mono);
 
   --color-paper: var(--color-paper-value);
@@ -38,16 +38,6 @@
   --color-red-value: #a84a36;
   --color-orange-value: #b86a2e;
   --color-green-value: #697a66;
-
-  /* Halftone/retinado — offset-print dot simulated over photographic images
-     only (see .halftone-frame). Intentionally theme-independent: a fixed
-     literal (not a --color-*-value reference, which would flip with the
-     theme) so the dots render identically in light and dark — the photo
-     itself doesn't change with the site's theme, so neither should this. */
-  --halftone-dot: #7fa1be;
-  --halftone-blend: screen;
-  --halftone-opacity: 0.28;
-  --halftone-size: 4.2px;
 }
 
 /* Blueprint variant: same roles, engineering-drawing palette. */
@@ -63,8 +53,6 @@
   --color-red-value: #c97a61;
   --color-orange-value: #d89a5d;
   --color-green-value: #8fa68c;
-
-  /* Halftone tokens are intentionally NOT overridden here — see :root. */
 }
 
 body {
@@ -103,21 +91,41 @@ h3 {
   }
 }
 
-/* Halftone/retinado — a thin offset-print dot layer over photographic images
-   only (profile photo, project figures). Never extends past the image's own
-   1px frame: the dot is drawn inside this same element via ::after with
-   overflow:hidden, so it's always contained exactly at the border. */
-.halftone-frame {
+/* Glass — reserved exclusively for live-data sectors (GithubActivity,
+   StackFrequency). Never a page-wide style, never candy-colored: one tint
+   (the system's own technical blue), read as an instrument's recessed
+   display housing. Square corners, like every other border in the system —
+   the material changes, the geometry doesn't. */
+.glass-panel {
   position: relative;
-  overflow: hidden;
+  background: linear-gradient(150deg, rgba(130, 190, 215, 0.35), rgba(60, 130, 160, 0.12));
+  box-shadow:
+    inset 0 2px 8px rgba(255, 255, 255, 0.5),
+    inset 0 -14px 22px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
-.halftone-frame::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, var(--halftone-dot) 0.6px, transparent 0.6px);
-  background-size: var(--halftone-size) var(--halftone-size);
-  mix-blend-mode: var(--halftone-blend);
-  opacity: var(--halftone-opacity);
-  pointer-events: none;
+.dark .glass-panel {
+  background: linear-gradient(150deg, rgba(127, 161, 190, 0.16), rgba(36, 56, 74, 0.4));
+  box-shadow:
+    inset 0 2px 8px rgba(255, 255, 255, 0.08),
+    inset 0 -14px 22px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Glow — the connecting thread between the glass sectors and the rest of
+   the (otherwise flat) site: the same functional dots the system already
+   used (status, category, timeline markers) get a soft halo instead of a
+   new color. Auto-adapts to the theme since it reads the same --color-*-value
+   tokens the dot's own background already uses. */
+.glow-green {
+  box-shadow: 0 0 5px 1px color-mix(in srgb, var(--color-green-value) 55%, transparent);
+}
+.glow-orange {
+  box-shadow: 0 0 5px 1px color-mix(in srgb, var(--color-orange-value) 55%, transparent);
+}
+.glow-red {
+  box-shadow: 0 0 5px 1px color-mix(in srgb, var(--color-red-value) 55%, transparent);
+}
+.glow-blue {
+  box-shadow: 0 0 5px 1px color-mix(in srgb, var(--color-blue-value) 55%, transparent);
 }

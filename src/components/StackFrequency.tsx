@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import DocControl from "@/components/DocControl";
+import SegmentBar from "@/components/SegmentBar";
 import type { StackFrequency as StackFrequencyData } from "@/lib/github";
 
 // Insight sector — DOC 05. Sits inside the right column, directly below
@@ -45,7 +46,9 @@ export default function StackFrequency() {
       id="stack-frequency"
       className="mx-auto max-w-6xl scroll-mt-24 border-t border-line px-6 py-16 md:py-20"
     >
-      <div className="border border-line bg-panel">
+      {/* Glass — reserved for live-data sectors only (see globals.css
+          .glass-panel). Visual identity exploration, 2026-10-24. */}
+      <div className="glass-panel">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-line px-6 py-4 sm:px-8">
           <div className="flex items-baseline gap-x-4">
             <DocControl id="05" />
@@ -80,9 +83,7 @@ export default function StackFrequency() {
                   className="grid grid-cols-[88px_1fr_28px] items-center gap-3 sm:grid-cols-[120px_1fr_28px]"
                 >
                   <span className="truncate font-mono text-xs text-ink-muted">{tech.name}</span>
-                  <div className="h-2 w-full bg-panel-2">
-                    <div className="h-full bg-blue" style={{ width: `${tech.score}%` }} />
-                  </div>
+                  <SegmentBar value={tech.score} />
                   <span className="text-right font-mono text-[10px] text-ink-muted">
                     {tech.score}
                   </span>

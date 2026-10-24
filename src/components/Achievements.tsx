@@ -17,7 +17,7 @@ export default function Achievements() {
       <ol className="mt-12 border-l border-line">
         {achievements.map((achievement, i) => (
           <li key={achievement.id} className="relative max-w-3xl pb-10 pl-8 last:pb-0">
-            <span className="absolute top-1.5 left-0 h-2 w-2 -translate-x-1/2 border border-blue bg-paper" />
+            <span className="glow-blue absolute top-1.5 left-0 h-2 w-2 -translate-x-1/2 border border-blue bg-paper" />
             <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
               <span className="font-mono text-xs text-blue">{String(i + 1).padStart(2, "0")}</span>
               <span className="font-mono text-xs uppercase tracking-wide text-ink-muted">
